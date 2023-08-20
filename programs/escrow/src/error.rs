@@ -10,8 +10,16 @@ pub enum EscrowError {
 
     #[error("NotRentExempt")]
     NotRentExempt,
+
+    #[error("ExpectedAmountMismatch")]
+    ExpectedAmountMismatch,
+
+    #[error("AmountOverflow")]
+    AmountOverflow
 }
 
+/// the trait std::convert::From<error::EscrowError> is not implemented for
+/// solana_program::program_error::ProgramError
 impl From<EscrowError> for ProgramError {
     fn from(e: EscrowError) -> Self {
         ProgramError::Custom(e as u32)

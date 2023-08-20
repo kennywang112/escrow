@@ -1,3 +1,5 @@
+// all accounts to be written to or read must passed in
+
 use solana_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, pubkey::Pubkey
 };

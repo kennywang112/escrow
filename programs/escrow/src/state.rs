@@ -6,23 +6,35 @@ use solana_program::sysvar::slot_history::ProgramError;
 
 use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
 pub struct Escrow {
+    // determine whether a given escrow account is already in use
     pub is_initialized: bool,
+    // Alice's account
     pub initializer_pubkey: Pubkey,
+
+    // save it so that escrow can send tokens from the account at 
+    // temp_token_account_publicky to Bob's account
     pub temp_token_account_pubkey: Pubkey,
+    // when bob takes the trade , his tokens will sent to this account
     pub initializer_token_to_receive_account_pubkey: Pubkey,
+    // check bob sends enough token
     pub expected_amount: u64,
 }
 
+// same as sized trait
 impl Sealed for Escrow {}
 
 impl IsInitialized for Escrow {
+
     fn is_initialized(&self) -> bool {
         self.is_initialized
     }
 }
 
 impl Pack for Escrow {
+
     const LEN: usize = 105;
+
+    // turns an array of u8 into an instance of Escrow struct defined above
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
         let src = array_ref![src, 0, Escrow::LEN];
         let (
@@ -47,6 +59,7 @@ impl Pack for Escrow {
         })
     }
     
+    // same as unpack but vice versa
     fn pack_into_slice(&self, dst: &mut [u8]) {
         let dst = array_mut_ref![dst, 0, Escrow::LEN];
         let (
